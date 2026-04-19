@@ -51,7 +51,7 @@ npm run dev  # http://localhost:8080/
 ## 📊 Screenshots
 | Home Hero | Products | Cart |
 |---|---|---|
-| ![Home](https://via.placeholder.com/600x300/2563eb/ffffff?text=Market+Store+Home) | ![Products](https://via.placeholder.com/600x300/f8fafc/1e293b?text=Products+Grid) | ![Cart](https://via.placeholder.com/600x300/10b981/ffffff?text=Smart+Cart) |
+| ![Home](./public/screenshots/home.png) | ![Products](./public/screenshots/products.png) | ![Cart](./public/screenshots/cart.png) |
 
 ## 🔮 Roadmap (Phase 2 Coming Soon)
 - [ ] React Router + Lazy Loading
