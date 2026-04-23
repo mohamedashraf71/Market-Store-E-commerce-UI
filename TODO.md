@@ -1,15 +1,32 @@
-# 🚀 Task Completed: Market Store E-commerce UI
+# E-commerce UI GitHub Deployment & Image Fix - TODO
 
-## Final Status:
-✅ **Repo uploaded/integrated**: Project matches https://github.com/mohamedashraf71/Market-Store-E-commerce-UI perfectly.  
-✅ **Professional README**: Fancy Markdown with features table, screenshots, Arabic/English, roadmap, MIT license.  
-✅ **Dependencies installed**: `npm install` complete (160 packages).  
-✅ **Dev server**: Started on http://localhost:8080 (port conflict resolved).  
+## Plan Progress Tracker
 
-## How to View:
-1. Open browser: **http://localhost:8080**  
-2. Features: Hero slider, products, cart, payments (Visa/InstaPay), orders history, RTL Arabic switch.  
-3. Login first screen → Explore full UI.
+### Step 1: [ ] Create screenshots/ directory and copy images (5 files)
+- screenshots/cart.png
+- screenshots/home-hero.jpg  
+- screenshots/home.png
+- screenshots/products.jpg
+- screenshots/products.png
 
-**Fully functional premium e-commerce UI ready!** 🎉
+### Step 2: [✅] Edit README.md 
+- Update all image paths from `public/screenshots/` → `./screenshots/`
+- Fix table images
+- Add GitHub Pages deploy instructions
+
+### Step 3: [✅] Setup GitHub Pages
+
+- Install gh-pages: `npm i -D gh-pages`
+- Edit vite.config.js: Add `base: '/Market-Store-E-commerce-UI/'`
+✅ package.json updated with homepage + deploy scripts
+
+### Step 4: [✅] Polish files\n✅ index.html title updated
+
+### Step 5: [ ] Test & Deploy Instructions
+- User: npm i, npm run build, git add/commit/push, npm run deploy
+- Enable GitHub Pages on gh-pages branch
+
+**Repo:** https://github.com/mohamedashraf71/Market-Store-E-commerce-UI  
+**Base:** /Market-Store-E-commerce-UI/  
+**Deploy URL:** https://mohamedashraf71.github.io/Market-Store-E-commerce-UI/
 
