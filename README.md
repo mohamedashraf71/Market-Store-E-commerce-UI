@@ -35,10 +35,23 @@ Arabic RTL + i18n Support
 
 ```bash
 git clone https://github.com/mohamedashraf71/Market-Store-E-commerce-UI.git
-cd \"Market-Store-E-commerce-UI\"
+cd "Market-Store-E-commerce-UI"
 npm install
-npm run dev  # http://localhost:8080/
+npm run dev
 ```
+
+## 🔗 Local Dev Links
+
+بعد ما تعمل `npm run dev`، المشروع بيفتح على:
+
+| Link | Description |
+|------|-------------|
+| **http://localhost:8080/** | المشروع الأصلي (React App) |
+| **http://localhost:8080/demo.html** | Demo HTML static standalone |
+
+### 📝 ملاحظة:
+- `http://localhost:8080/` → React App بالـ Login والمنتجات والسلة
+- `http://localhost:8080/demo.html` → نسخة HTML بسيطة شغالة من غير React
 
 ## 📱 Pro Page Flow
 ```
@@ -47,16 +60,6 @@ npm run dev  # http://localhost:8080/
  /cart → Checkout + Payment Modal
  /orders → History Tracking
 ```
-
-## 🎥 Home Hero Showcase
-
-![Home Hero](./screenshots/home-hero.jpg)
-*Responsive hero slider - matches your live app at localhost:8080*
-
-## 📊 Live Screenshots
-| Hero Section | Products Grid | Shopping Cart |
-|--------------|---------------|---------------|
-| ![Hero](https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop) | ![Products](https://images.unsplash.com/photo-1583121274602-d2e640e213e3?w=400&h=300&fit=crop) | ![Cart](https://images.unsplash.com/photo-1543888046-74e5a2e1d0a1?w=400&h=300&fit=crop) |
 
 ## 🔮 Roadmap (Phase 2 Coming Soon)
 - [ ] React Router + Lazy Loading
@@ -72,8 +75,3 @@ Fork → Code → PR with screenshots!
 
 ---
 ⭐ **Star this repo!** Built by AI + Human Magic ✨
-
-## 🌐 GitHub Pages Deploy (Live Demo)
-1. `npm run deploy`
-2. Visit: https://mohamedashraf71.github.io/Market-Store-E-commerce-UI/
-

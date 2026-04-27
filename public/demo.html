@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market Store - E-commerce UI | Demo</title>
+  <style>
+    :root {
+      --primary: #ff9900;
+      --primary-dark: #e8890a;
+      --secondary: #232f3e;
+      --bg: #f3f3f3;
+      --card-bg: #ffffff;
+      --text: #0f1111;
+      --text-light: #565959;
+      --border: #ddd;
+      --success: #067d62;
+      --danger: #c40000;
+      --radius: 8px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+    .navbar {
+      background: var(--secondary);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+    }
+    .logo { font-size: 22px; font-weight: bold; color: var(--primary); cursor: pointer; }
+    .search-bar { flex: 1; display: flex; min-width: 200px; max-width: 600px; }
+    .search-bar input { flex: 1; padding: 10px 14px; border: none; border-radius: var(--radius) 0 0 var(--radius); font-size: 14px; }
+    .search-bar button { padding: 10px 18px; background: var(--primary); border: none; border-radius: 0 var(--radius) var(--radius) 0; cursor: pointer; font-weight: bold; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links button { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px; position: relative; }
+    .cart-count {
+      position: absolute; top: -8px; right: -10px; background: var(--primary); color: var(--secondary);
+      font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lang-toggle { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 4px 10px; border-radius: var(--radius); cursor: pointer; font-size: 13px; }
+    .hero { background: linear-gradient(135deg, #232f3e 0%, #37475a 100%); color: #fff; padding: 60px 24px; text-align: center; }
+    .hero h1 { font-size: 36px; margin-bottom: 12px; }
+    .hero p { font-size: 18px; opacity: 0.9; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .section-title { font-size: 24px; margin-bottom: 20px; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .product-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.2s; cursor: pointer; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+    .product-image { width: 100%; height: 200px; object-fit: cover; background: #eee; }
+    .product-body { padding: 16px; }
+    .product-name { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .product-price { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+    .product-original { font-size: 14px; color: var(--text-light); text-decoration: line-through; margin-left: 8px; }
+    .product-meta { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
+    .product-rating { color: var(--primary); font-size: 14px; margin-bottom: 10px; }
+    .btn-primary { width: 100%; padding: 10px; background: var(--primary); border: none; border-radius: var(--radius); font-weight: bold; cursor: pointer; font-size: 14px; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .categories { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .category-chip { padding: 8px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 14px; }
+    .category-chip.active, .category-chip:hover { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+    .login-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    .login-box { background: var(--card-bg); padding: 40px; border-radius: var(--radius); width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    .login-box h2 { margin-bottom: 20px; text-align: center; }
+    .login-box input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; }
+    .login-box button { width: 100%; padding: 12px; background: var(--primary); border: none; border-radius: var(--radius); font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 8px; }
+    .hidden { display: none !important; }
+    .cart-page, .orders-page { max-width: 800px; margin: 0 auto; padding: 24px; }
+    .cart-item { display: flex; gap: 16px; background: var(--card-bg); padding: 16px; border-radius: var(--radius); margin-bottom: 12px; box-shadow: var(--shadow); }
+    .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius); }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-weight: 600; margin-bottom: 4px; }
+    .cart-item-price { color: var(--text-light); font-size: 14px; }
+    .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .qty-controls button { width: 28px; height: 28px; border: 1px solid var(--border); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .back-btn { margin-bottom: 20px; padding: 8px 16px; background: transparent; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+    .empty-state h2 { color: var(--text); margin-bottom: 10px; }
+    .order-card { background: var(--card-bg); padding: 20px; border-radius: var(--radius); margin-bottom: 16px; box-shadow: var(--shadow); }
+    .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .order-status { background: var(--success); color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
+    .footer { background: var(--secondary); color: #fff; padding: 40px 24px 20px; margin-top: 60px; }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+    .footer-section h4 { margin-bottom: 12px; color: var(--primary); }
+    .footer-section a { color: #ccc; text-decoration: none; display: block; margin-bottom: 6px; font-size: 14px; }
+    .footer-bottom { max-width: 1200px; margin: 20px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 14px; color: #aaa; }
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; align-items: stretch; }
+      .search-bar { max-width: none; }
+      .hero h1 { font-size: 26px; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <h2>🔐 Welcome to Market Store</h2>
+    <p style="text-align:center; color:#666; margin-bottom:20px;">Login to discover the best deals</p>
+    <input type="text" id="loginEmail" placeholder="Email or username" value="demo@market.com" />
+    <input type="password" id="loginPassword" placeholder="Password" value="password" />
+    <button onclick="handleLogin()">Login</button>
+    <p style="text-align:center; margin-top:12px; font-size:13px; color:#888;">Use any email & password to login</p>
+  </div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="logo" onclick="showPage('home')">🛒 Market Store</div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="handleSearch(event)" />
+    <button onclick="doSearch()">Search</button>
+  </div>
+  <div class="nav-links">
+    <button onclick="toggleLang()" class="lang-toggle" id="langBtn">AR</button>
+    <button onclick="showPage('orders')">📦 Orders</button>
+    <button onclick="showPage('cart')" style="position:relative;">
+      🛒 Cart <span id="cartCount" class="cart-count hidden">0</span>
+    </button>
+    <button onclick="handleLogout()">🚪 Logout</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero" id="heroSection">
+  <h1>Shop the best deals with Market Store</h1>
+  <p>Fast delivery, daily offers, and everything you need in one place.</p>
+</div>
+
+<!-- Main Content -->
+<div class="container" id="mainContent">
+  <div class="categories" id="categories">
+    <button class="category-chip active" onclick="filterCategory('all')">All</button>
+    <button class="category-chip" onclick="filterCategory('electronics')">Electronics</button>
+    <button class="category-chip" onclick="filterCategory('clothes')">Clothes</button>
+    <button class="category-chip" onclick="filterCategory('accessories')">Accessories</button>
+    <button class="category-chip" onclick="filterCategory('home')">Home</button>
+    <button class="category-chip" onclick="filterCategory('beauty')">Beauty</button>
+  </div>
+  <h2 class="section-title" id="productsTitle">🔥 Featured Products</h2>
+  <div class="products-grid" id="productsGrid"></div>
+
+<!-- Cart Page -->
+<div class="cart-page hidden" id="cartPage">
+  <button class="back-btn" onclick="showPage('home')">← Back to Shopping</button>
+  <h1>Your Shopping Cart</h1>
+  <div id="cartItems"></div>
+  <div id="cartSummary" style="margin-top:20px; text-align:right;"></div>
+
+<!-- Orders Page -->
+<div class="orders-page hidden" id="ordersPage">
+  <button class="back-btn" onclick="showPage('home')">← Back to Shopping</button>
+  <h2>📦 My Orders</h2>
+  <div id="ordersList"></div>
+
+<!-- Footer -->
+<footer class="footer" id="footer">
+  <div class="footer-grid">
+    <div class="footer-section">
+      <h4>Market Store</h4>
+      <p style="color:#ccc; font-size:14px;">A trusted online marketplace offering everything you need.</p>
+    </div>
+    <div class="footer-section">
+      <h4>Categories</h4>
+      <a href="#">Electronics</a>
+      <a href="#">Fashion</a>
+      <a href="#">Accessories</a>
+      <a href="#">Home</a>
+    </div>
+    <div class="footer-section">
+      <h4>Support</h4>
+      <a href="#">Contact Us</a>
+      <a href="#">Shipping</a>
+      <a href="#">Returns</a>
+    </div>
+  <div class="footer-bottom">© 2026 Market Store. All rights reserved.</div>
+</footer>
+
+<script>
+  const products = [
+    { id: 1, name: 'Gaming Laptop Pro', price: 1299, originalPrice: 1499, image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop', category: 'electronics', vendor: 'Noon Tech', rating: 4.8, reviews: 124, offer: 'Best Seller', inStock: true },
+    { id: 2, name: 'Premium Cotton T-Shirt', price: 29, originalPrice: 39, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop', category: 'clothes', vendor: 'Fashion Hub', rating: 4.6, reviews: 89, offer: 'Hot Deal', inStock: true },
+    { id: 3, name: 'iPhone 15 Pro Max', price: 1199, originalPrice: 1299, image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop', category: 'electronics', vendor: 'Apple Store', rating: 4.9, reviews: 256, offer: 'Free Shipping', inStock: true },
+    { id: 4, name: 'Designer Denim Jeans', price: 79, originalPrice: 99, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop', category: 'clothes', vendor: 'Style Closet', rating: 4.4, reviews: 67, offer: 'New Arrival', inStock: true },
+    { id: 5, name: 'Wireless Noise-Cancelling Headphones', price: 199, originalPrice: 249, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop', category: 'electronics', vendor: 'Audio Zone', rating: 4.7, reviews: 178, offer: 'Best Price', inStock: true },
+    { id: 6, name: 'Performance Running Sneakers', price: 129, originalPrice: 159, image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=300&fit=crop', category: 'clothes', vendor: 'Sportify', rating: 4.5, reviews: 92, offer: 'Limited Stock', inStock: true },
+    { id: 7, name: 'Smart Fitness Watch', price: 299, originalPrice: 349, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop', category: 'electronics', vendor: 'Fit Gear', rating: 4.6, reviews: 145, offer: 'Trending', inStock: true },
+    { id: 8, name: 'Leather Biker Jacket', price: 189, originalPrice: 229, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop', category: 'clothes', vendor: 'Urban Wear', rating: 4.8, reviews: 73, offer: 'Most Loved', inStock: false },
+    { id: 9, name: 'Premium Wireless Earbuds', price: 79, originalPrice: 99, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop', category: 'accessories', vendor: 'Audio Pro', rating: 4.7, reviews: 156, offer: 'Best Seller', inStock: true },
+    { id: 10, name: 'Leather Crossbody Bag', price: 59, originalPrice: 79, image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=300&fit=crop', category: 'accessories', vendor: 'Fashion Hub', rating: 4.6, reviews: 98, offer: 'New Arrival', inStock: true },
+    { id: 11, name: 'UV Protection Sunglasses', price: 45, originalPrice: 65, image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=300&fit=crop', category: 'accessories', vendor: 'Style Closet', rating: 4.5, reviews: 67, offer: 'Hot Deal', inStock: true },
+    { id: 12, name: 'Smart Home LED Bulbs', price: 39, originalPrice: 49, image: 'https://images.unsplash.com/photo-1565636192335-14c2b928cb9d?w=400&h=300&fit=crop', category: 'home', vendor: 'Smart Living', rating: 4.8, reviews: 234, offer: 'Trending', inStock: true },
+    { id: 13, name: 'Premium Memory Foam Pillow', price: 49, originalPrice: 69, image: 'https://images.unsplash.com/photo-1584622614875-e51df1bdc82f?w=400&h=300&fit=crop', category: 'home', vendor: 'Comfort Zone', rating: 4.7, reviews: 312, offer: 'Best Price', inStock: true },
+    { id: 14, name: 'Portable Kitchen Blender', price: 34, originalPrice: 49, image: 'https://images.unsplash.com/photo-1555597673-b21d5c4722be?w=400&h=300&fit=crop', category: 'home', vendor: 'Kitchen Pro', rating: 4.6, reviews: 189, offer: 'Limited Stock', inStock: true },
+    { id: 15, name: 'Organic Moisturizing Cream', price: 24, originalPrice: 34, image: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=300&fit=crop', category: 'beauty', vendor: 'Beauty Care', rating: 4.8, reviews: 423, offer: 'Best Seller', inStock: true },
+    { id: 16, name: 'Professional Hair Dryer', price: 59, originalPrice: 79, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=300&fit=crop', category: 'beauty', vendor: 'Hair Style', rating: 4.7, reviews: 178, offer: 'Hot Deal', inStock: true },
+    { id: 17, name: 'Luxury Face Serum', price: 49, originalPrice: 69, image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=300&fit=crop', category: 'beauty', vendor: 'Beauty Labs', rating: 4.9, reviews: 567, offer: 'Premium', inStock: true },
+  ];
+
+  const translations = {
+    en: {
+      searchPlaceholder: 'Search products...', heroTitle: 'Shop the best deals with Market Store',
+      heroSubtitle: 'Fast delivery, daily offers, and everything you need in one place.',
+      featured: '🔥 Featured Products', cart: '🛒 Cart', orders: '📦 Orders', logout: '🚪 Logout',
+      back: '← Back to Shopping', yourCart: 'Your Shopping Cart', myOrders: '📦 My Orders',
+      noOrders: 'No Orders Yet', startShopping: 'Start shopping now', addToCart: 'Add to Cart',
+      outOfStock: 'Out of Stock', emptyCart: 'Your cart is empty', total: 'Total', checkout: 'Checkout',
+      orderSuccess: 'Order placed successfully!', all: 'All', electronics: 'Electronics', clothes: 'Clothes',
+      accessories: 'Accessories', home: 'Home', beauty: 'Beauty',
+    },
+    ar: {
+      searchPlaceholder: 'ابحث عن منتجات...', heroTitle: 'تسوّق أفضل العروض من ماركت ستور',
+      heroSubtitle: 'توصيل سريع، عروض يومية، وكل ما تحتاجه في مكان واحد.',
+      featured: '🔥 المنتجات المميزة', cart: '🛒 السلة', orders: '📦 الطلبات', logout: '🚪 تسجيل الخروج',
+      back: '← العودة للتسوق', yourCart: 'سلة التسوق', myOrders: '📦 طلباتي', noOrders: 'لا توجد طلبات',
+      startShopping: 'ابدأ التسوق الآن', addToCart: 'أضف للسلة', outOfStock: 'غير متوفر',
+      emptyCart: 'السلة فارغة', total: 'الإجمالي', checkout: 'إتمام الشراء', orderSuccess: 'تم الطلب بنجاح!',
+      all: 'الكل', electronics: 'إلكترونيات', clothes: 'ملابس', accessories: 'إكسسوارات', home: 'المنزل', beauty: 'جمال',
+    }
+  };
+
+  let cart = JSON.parse(localStorage.getItem('demo_cart') || '[]');
+  let orders = JSON.parse(localStorage.getItem('demo_orders') || '[]');
+  let lang = localStorage.getItem('demo_lang') || 'en';
+  let isLoggedIn = localStorage.getItem('demo_user') !== null;
+  let currentCategory = 'all';
+  let searchTerm = '';
+
+  function init() {
+    if (isLoggedIn) document.getElementById('loginOverlay').classList.add('hidden');
+    updateLang();
+    renderProducts();
+    updateCartCount();
+  }
+
+  function handleLogin() {
+    const email = document.getElementById('loginEmail').value;
+    if (email.trim()) {
+      localStorage.setItem('demo_user', JSON.stringify({ email }));
+      isLoggedIn = true;
+      document.getElementById('loginOverlay').classList.add('hidden');
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('demo_user');
+    localStorage.removeItem('demo_cart');
+    cart = [];
+    orders = [];
+    updateCartCount();
+    location.reload();
+  }
+
+  function toggleLang() {
+    lang = lang === 'en' ? 'ar' : 'en';
+    localStorage.setItem('demo_lang', lang);
+    updateLang();
+    renderProducts();
+    renderCart();
+    renderOrders();
+  }
+
+  function updateLang() {
+    const tr = translations[lang];
+    document.getElementById('searchInput').placeholder = tr.searchPlaceholder;
+    document.querySelector('.hero h1').textContent = tr.heroTitle;
+    document.querySelector('.hero p').textContent = tr.heroSubtitle;
+    document.getElementById('productsTitle').textContent = tr.featured;
+    document.getElementById('langBtn').textContent = lang === 'en' ? 'AR' : 'EN';
+    document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    const keys = ['all', 'electronics', 'clothes', 'accessories', 'home', 'beauty'];
+    document.querySelectorAll('.category-chip').forEach((btn, i) => { btn.textContent = tr[keys[i]]; });
+  }
+
+  function tr(key) { return translations[lang][key] || key; }
+
+  function renderProducts() {
+    const grid = document.getElementById('productsGrid');
+    const filtered = products.filter(p => {
+      const ms = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const mc = currentCategory === 'all' || p.category === currentCategory;
+      return ms && mc;
+    });
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><h2>No products found</h2><p>Try another search or category.</p></div>';
+      return;
+    }
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card">
+        <img class="product-image" src="${p.image}" alt="${p.name}" loading="lazy" />
+        <div class="product-body">
+          <div class="product-name">${p.name}</div>
+          <div class="product-price">$${p.price}${p.originalPrice ? `<span class="product-original">$${p.originalPrice}</span>` : ''}</div>
+          <div class="product-meta">${p.vendor} · ${p.offer}</div>
+          <div class="product-rating">★ ${p.rating} (${p.reviews})</div>
+          <button class="btn-primary" onclick="addToCart(${p.id})"${!p.inStock ? ' disabled style="opacity:0.5"' : ''}>${p.inStock ? tr('addToCart') : tr('outOfStock')}</button>
+        </div>`).join('');
+  }
+
+  function filterCategory(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    renderProducts();
+  }
+
+  function handleSearch(e) { if (e.key === 'Enter') doSearch(); }
+  function doSearch() { searchTerm = document.getElementById('searchInput').value; renderProducts(); }
+
+  function addToCart(pid) {
+    const p = products.find(x => x.id === pid);
+    const ex = cart.find(x => x.id === pid);
+    if (ex) ex.quantity++; else cart.push({ ...p, quantity: 1 });
+    saveCart(); updateCartCount(); showPage('cart');
+  }
+
+  function removeFromCart(pid) { cart = cart.filter(x => x.id !== pid); saveCart(); renderCart(); updateCartCount(); }
+
+  function updateQuantity(pid, d) {
+    const it = cart.find(x => x.id === pid);
+    if (!it) return;
+    it.quantity += d;
+    if (it.quantity <= 0) { removeFromCart(pid); return; }
+    saveCart(); renderCart(); updateCartCount();
+  }
+
+  function saveCart() { localStorage.setItem('demo_cart', JSON.stringify(cart)); }
+
+  function updateCartCount() {
+    const c = cart.reduce((s, i) => s + i.quantity, 0);
+    const b = document.getElementById('cartCount');
+    b.textContent = c;
+    b.classList.toggle('hidden', c === 0);
+  }
+
+  function renderCart() {
+    const con = document.getElementById('cartItems');
+    const sum = document.getElementById('cartSummary');
+    if (cart.length === 0) {
+      con.innerHTML = `<div class="empty-state"><h2>${tr('emptyCart')}</h2><p>Add some products first!</p></div>`;
+      sum.innerHTML = ''; return;
+    }
+    con.innerHTML = cart.map(i => `
+      <div class="cart-item">
+        <img src="${i.image}" alt="${i.name}" />
+        <div class="cart-item-info">
+          <div class="cart-item-name">${i.name}</div>
+          <div class="cart-item-price">$${i.price} each</div>
+          <div class="qty-controls">
+            <button onclick="updateQuantity(${i.id}, -1)">−</button>
+            <span>${i.quantity}</span>
+            <button onclick="updateQuantity(${i.id}, 1)">+</button>
+            <button onclick="removeFromCart(${i.id})" style="margin-left:auto;color:var(--danger);border:none;background:transparent;cursor:pointer;">🗑️</button>
+          </div>
+      </div>`).join('');
+    const tot = cart.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2);
+    sum.innerHTML = `<div style="font-size:20px;font-weight:bold;margin-bottom:12px;">${tr('total')}: $${tot}</div><button class="btn-primary" style="max-width:200px;" onclick="checkout()">${tr('checkout')}</button>`;
+  }
+
+  function checkout() {
+    if (cart.length === 0) return;
+    const o = { id: Date.now(), date: new Date().toLocaleDateString(), items: [...cart], total: cart.reduce((s, i) => s + i.price * i.quantity, 0).toFixed(2) };
+    orders.unshift(o);
+    localStorage.setItem('demo_orders', JSON.stringify(orders));
+    cart = []; saveCart(); updateCartCount();
+    alert(tr('orderSuccess')); showPage('orders');
+  }
+
+  function renderOrders() {
+    const c = document.getElementById('ordersList');
+    if (orders.length === 0) {
+      c.innerHTML = `<div class="empty-state"><div style="font-size:48px;margin-bottom:16px;">📦</div><h2>${tr('noOrders')}</h2><p>${tr('startShopping')}</p><button class="btn-primary" style="margin-top:16px;" onclick="showPage('home')">Shop Now</button></div>`;
+      return;
+    }
+    c.innerHTML = orders.map(o => `
+      <div class="order-card">
+        <div class="order-header">
+          <div><div style="font-weight:bold;">Order #${o.id}</div><div style="font-size:13px;color:#666;">${o.date}</div>
+          <span class="order-status">✓ Delivered</span>
+        </div>
+        <div style="margin-bottom:12px;">
+          ${o.items.map(i => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;"><span>${i.name} x${i.quantity}</span><span>$${(i.price * i.quantity).toFixed(2)}</span></div>`).join('')}
+        </div>
+        <div style="text-align:right;font-size:18px;font-weight:bold;">Total: $${o.total}</div>`).join('');
+  }
+
+  function showPage(page) {
+    document.getElementById('mainContent').classList.toggle('hidden', page !== 'home');
+    document.getElementById('heroSection').classList.toggle('hidden', page !== 'home');
+    document.getElementById('cartPage').classList.toggle('hidden', page !== 'cart');
+    document.getElementById('ordersPage').classList.toggle('hidden', page !== 'orders');
+    document.getElementById('footer').classList.toggle('hidden', page !== 'home');
+    if (page === 'cart') renderCart();
+    if (page === 'orders') renderOrders();
+  }
+
+  init();
+</script>
+</body>
+</html>
